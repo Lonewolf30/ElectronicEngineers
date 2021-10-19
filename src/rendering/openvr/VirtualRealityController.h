@@ -1,0 +1,15 @@
+#ifndef ELECTRONICENGINEERS_VIRTUALREALITYCONTROLLER_H
+#define ELECTRONICENGINEERS_VIRTUALREALITYCONTROLLER_H
+
+
+class VirtualRealityController {
+public:
+
+
+private:
+
+
+};
+
+
+#endif

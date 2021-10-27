@@ -1,16 +1,16 @@
 #include "RenderingEngine.h"
 
 #include "../core/Time.h"
-#include "../scene/MainMenu.h"
 #include <thread>
 
 RenderingEngine::RenderingEngine() {
-	mainDisplay = Display();
-	mouse = Mouse(&mainDisplay);
-	keyboard = Keyboard(&mainDisplay);
-	currentGame = &Game();
+	mainDisplay = new Display();
+	mouse = new Mouse(mainDisplay);
+	keyboard = new Keyboard(mainDisplay);
+	configuration = new Configuration("display");
+	vulkan = new VulkanRenderer(mainDisplay, configuration);
 
-	userInterface = OpenGLShader("userinterface");
+	game = nullptr;
 
 	isRunning = false;
 	frameTime = 1.0 / 60.0;
@@ -56,7 +56,7 @@ void RenderingEngine::Run() {
 			unprocessedTime -= frameTime;
 			render = true;
 
-			if (mainDisplay.IsCloseRequested())
+			if (mainDisplay->IsCloseRequested())
 				Stop();
 
 			if (passedTime >= 1) {
@@ -77,49 +77,37 @@ void RenderingEngine::Run() {
 	CleanUp();
 }
 
+#include "../game_components/ModelRender.h"
+
 void RenderingEngine::Initialise() {
-	configuration.LoadConfigurations();
+	configuration->LoadConfigurations();
+	// TODO Game Configurations
 
-	mainDisplay.CreateDisplay(&configuration);
+	mainDisplay->CreateDisplay(configuration);
 
-	InitialiseMainMenu(currentGame);
-
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-	glEnable(GL_TEXTURE_2D);
-
-	//TODO: OpenGL Rendering
-	userInterface.Initialise();
-
-	//TODO: Vulkan Init
-
-	//TODO: OpenGLShader Init
-
-	//TODO: SwapChainCreation
+	vulkan->SetGame(game);
+	vulkan->Initialise();
 }
 
 void RenderingEngine::Render() {
-	currentGame->InputAll(mouse, keyboard);
-	currentGame->UpdateAll2D(frameTime);
+	mouse->Update();
+	keyboard->Update();
 
-	mouse.Update();
-	keyboard.Update();
+	vulkan->Draw();
 
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	currentGame->RenderAll2D(userInterface, mainDisplay.GetDisplaySize());
-
-	mainDisplay.SwapBuffers();
 	Display::PollEvents();
 }
 
 void RenderingEngine::CleanUp() {
-	mainDisplay.CleanUp(&configuration);
+	game->CleanUp();
+	vulkan->CleanUp();
+	mainDisplay->CleanUp(configuration);
 
-	if(configuration.HasConfigurationChanged())
-		configuration.SaveConfigurations();
+	if(configuration->HasConfigurationChanged())
+		configuration->SaveConfigurations();
 }
 
-void RenderingEngine::SetGame(Game* game) {
-	this->currentGame = game;
+void RenderingEngine::LoadScene(Scene* scene) {
+	game = new Game();
+	scene->Initialise(game);
 }

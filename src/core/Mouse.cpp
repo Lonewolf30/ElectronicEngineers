@@ -25,6 +25,6 @@ void Mouse::Update() {
 		mouseDown[i] = display->GetMouseButtonState(i);
 }
 
-Vector2d Mouse::GetMousePosition() {
+Vector2<double> Mouse::GetMousePosition() {
 	return display->GetMousePosition();
 }

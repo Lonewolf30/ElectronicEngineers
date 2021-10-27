@@ -1,24 +1,21 @@
 #include <vulkan/vulkan.h>
-
-#define GLEW_STATIC
-#include <GL/glew.h>
 #include <GLFW/glfw3.h>
-
 
 #ifndef ELECTRONICENGINEERS_DISPLAY_H
 #define ELECTRONICENGINEERS_DISPLAY_H
 
-#include "../core/vec2/Vector2d.h"
+#include "../core/Vector2.h"
 #include "../core/Configuration.h"
 
 class Display {
 public:
 	Display();
 	void CreateDisplay(Configuration* configuration);
-	void SwapBuffers();
 
-	Vector2d GetDisplaySize();
-	Vector2d GetMousePosition();
+	const char** GetGLFWExtensions(uint32_t* extensionCount);
+
+	Vector2<int>* GetDisplaySize();
+	Vector2<double> GetMousePosition();
 
 	bool IsCloseRequested();
 
@@ -31,10 +28,12 @@ public:
 	bool HasFrameBufferResized();
 	void SetFrameBufferResized(bool resized);
 
+	void CreateSurface(VkInstance instance, VkSurfaceKHR *surface);
+
 private:
 	GLFWwindow* window;
-	Vector2d displaySize = {0,0};
-	Vector2d scrollOffset = {0,0};
+	Vector2<int>* displaySize;
+	Vector2<double>* scrollOffset;
 	bool frameBufferResized;
 };
 

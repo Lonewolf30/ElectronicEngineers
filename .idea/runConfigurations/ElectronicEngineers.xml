@@ -1,7 +1,0 @@
-<component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="ElectronicEngineers" type="CMakeRunConfiguration" factoryName="Application" singleton="true" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="ElectronicEngineers" TARGET_NAME="ElectronicEngineers" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="ElectronicEngineers" RUN_TARGET_NAME="ElectronicEngineers">
-    <method v="2">
-      <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
-    </method>
-  </configuration>
-</component>

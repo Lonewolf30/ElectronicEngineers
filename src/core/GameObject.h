@@ -1,9 +1,8 @@
-#include "Mouse.h"
-#include "Keyboard.h"
-#include <map>
 #include <vector>
+#include <cstdint>
+#include <type_traits>
 
-class GameObject;
+#include <iostream>
 
 #ifndef ELECTRONICENGINEERS_GAMEOBJECT_H
 #define ELECTRONICENGINEERS_GAMEOBJECT_H
@@ -13,23 +12,32 @@ class GameObject;
 using namespace std;
 
 class GameObject {
-public:
-	void InputAll(Mouse mouse, Keyboard keyboard);
-	void UpdateAll(float delta);
-
-	void AddComponent(unsigned int id, GameComponent component);
-	void RemoveComponent(unsigned int id);
-
-	void SetParent(GameObject* parent);
-	GameObject* GetParent();
-
 private:
-	void Input(Mouse mouse, Keyboard keyboard);
-	void Update(float delta);
+	vector<GameComponent *> gameComponents;
 
-	map<unsigned int, GameObject> children;
-	map<unsigned int, GameComponent> components;
-	GameObject* parent;
+public:
+	GameObject();
+
+	void AddComponent(GameComponent *component);
+
+	vector<GameComponent *> GetComponents();
+
+	void CleanUp();
+
+
+	template<class T>
+	vector<GameComponent *> GetComponentsOfType() {
+		vector<GameComponent *> result;
+
+		for (GameComponent *component: gameComponents) {
+			if (auto *comp = dynamic_cast<T*>(component)) {
+				result.push_back(comp);
+			}
+		}
+
+		return result;
+	};
 };
+
 
 #endif

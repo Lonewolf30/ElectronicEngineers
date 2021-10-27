@@ -1,4 +1,4 @@
-#include "vec2/Vector2d.h"
+#include "Vector2.h"
 #include "../rendering/Display.h"
 
 #ifndef ELECTRONICENGINEERS_MOUSE_H
@@ -24,7 +24,7 @@ public:
 
 	void Update();
 
-	Vector2d GetMousePosition();
+	Vector2<double> GetMousePosition();
 private:
 	bool mouseDown[NUM_MOUSE_CODES]{};
 	Display* display;
